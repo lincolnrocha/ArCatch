@@ -12,43 +12,45 @@ ArCatch in 5 steps
 1. Configuration
 
     ```java
-    ArCatch.config("source code path", "binary path");
+    ArCatch.config("source code path", "binary code (.jar) path");
     ```
 2. Module Declaration
     ```java
-    ModuleElement m = ArCatch.element().module("M").matching("regex").build();
+    ModuleElement view = ArCatch.element().module("View").matching("banksys.view.\\w+").build();
 
-    ModuleElement n = ArCatch.element().module("N").matching("regex").build();
+    ModuleElement control = ArCatch.element().module("Control").matching("banksys.control.\\w+").build();
 
-    ModuleElement p = ArCatch.element().module("P").matching("regex").build();
+    ModuleElement model = ArCatch.element().module("Model").matching("banksys.model.\\w+").build();
     ```
 3. Exception Declaration
     ```java
-    ExceptionElement e = ArCatch.element().exception("E").matching("regex").build();
+    ExceptionElement modelEx = ArCatch.element().exception("ControlEx").matching("banksys.control.exception.\\w+").build();
 
-    ExceptionElement f = ArCatch.element().exception("F").matching("regex").build();
+    ExceptionElement controlEx = ArCatch.element().exception("ModelEx").matching("banksys.model.exception.\\w+").build();
     ```
 4. Design Rule Especification
     ```java
-    DesignRule r1 = ArCatch.rule().module(m).cannotSignal(e).build();
+    DesignRule r1 = ArCatch.rule().only(model).canRaise(modelEx).build();
 
-    DesignRule r2 = ArCatch.rule().only(m).canRaise(e).build();
+    DesignRule r2 = ArCatch.rule().only(model).canSignal(modelEx).build();
+    
+    DesignRule r3 = ArCatch.rule().module(control).mustHandle(modelEx).build();
 
-    DesignRule r3 = ArCatch.rule().module(m).mustHandle(e).build();
+    DesignRule r4 = ArCatch.rule().module(control).canOnlySignal(controlEx).build();
 
-    DesignRule r4 = ArCatch.rule().module(n).canOnlySignal(e).build();
+    DesignRule r5 = ArCatch.rule().exception(modelEx).cannotFlow(model, control, view).build();
 
-    DesignRule r5 = ArCatch.rule().exception(e).cannotFlow(m, n, p).build();
+    DesignRule r6 = ArCatch.rule().only(control).canRemap(modelEx).to(controlEx).build();
 
-    DesignRule r6 = ArCatch.rule().only(n).canRemap(e).to(f).build();
-
-    DesignRule r7 = ArCatch.rule().module(p).mustReraise(e).build();
+    DesignRule r7 = ArCatch.rule().module(view).mustHandle(controlEx).build();
+    
+    DesignRule r8 = ArCatch.rule().module(view).cannotHandle(modelEx).build();
     ```
 5. Checking Rules
     ```java
     ArCatch.checker().addRule(r1);
     ...
-    ArCatch.checker().addRule(r7);
+    ArCatch.checker().addRule(r8);
 
     ArCatch.checker().checkAll();
     ```
@@ -56,7 +58,7 @@ ArCatch in 5 steps
     ```java
     boolean resultR1 = ArCatch.checker().check(r1);
     ...
-    boolean resultR7 = ArCatch.checker().check(r7);
+    boolean resultR7 = ArCatch.checker().check(r8);
     ```
 
 Conformance Report
@@ -71,24 +73,22 @@ Label: (V) = Rule Pass | (X) = Rule Fail
 ========================================================================================================
 ...
 --------------------------------------------------------------------------------------------------------
-(X) R8: only (BuL) can raise (BuLEx) 8 ms
+(X) R2: only (Model) can signal (ModelEx) 8 ms
 
- -BuL module implementation classes:
-  -healthwatcher.business.complaint.ComplaintRecord
-  -healthwatcher.business.healthguide.HealthUnitRecord
-  -healthwatcher.business.healthguide.MedicalSpecialityRecord
-  -healthwatcher.business.factories.FacadeFactory
-  -healthwatcher.business.factories.RMIFacadeFactory
-  -healthwatcher.business.complaint.DiseaseRecord
-  -healthwatcher.business.complaint.SymptomRecord
-  -healthwatcher.business.employee.EmployeeRecord
-  -healthwatcher.business.factories.AbstractFacadeFactory
+ -Model module implementation classes:
+  -banksys.model.AbstractAccount
+  -banksys.model.OrdinaryAccount
+  -banksys.model.SavingsAccount
+  -banksys.model.SpecialAccount
+  -banksys.model.TaxAccount
 
- -BuLEx exception implementation classes:
-  -lib.exceptions.ObjectAlreadyInsertedException
+ -ModelEx exception implementation classes:
+  -banksys.model.exception.InsufficientFundsException
+  -banksys.model.exception.NegativeAmountException
 
  -Rule Violations
-	-The method [healthwatcher.data.rdb.AddressRepositoryRDB.insert(healthwatcher.model.address.Address)] is raising the exception [lib.exceptions.ObjectAlreadyInsertedException]
+	-Method [banksys.control.BankController.doDebit(java.lang.String, double)] is signaling the exception [lib.exceptions.InsufficientFundsException]
+	-Method [banksys.control.BankController.doDebit(java.lang.String, double)] is signaling the exception [lib.exceptions.NegativeAmountException]
 --------------------------------------------------------------------------------------------------------
 ...
 ```
