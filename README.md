@@ -61,7 +61,37 @@ ArCatch in 5 steps
 
 Conformance Report
 ------------------
-ArCatch.Checker provides a report containing useful information on which design rules have been violated and where such violations take place in the software source code. If ```ArCatch.checker().checkAll()``` is used a text-based conformance chacking report is generated at ```./report``` folder. However, if ```ArCatch.checker().check(rule)``` is employed, you can access information abou rule violation performing ```rule.getReport()```. 
+ArCatch.Checker provides a report containing useful information on which design rules have been violated and where such violations take place in the software source code. If ```ArCatch.checker().checkAll()``` is used a text-based conformance chacking report is generated at ```./report``` folder. However, if ```ArCatch.checker().check(rule)``` is employed, you can access information abou rule violation performing ```rule.getReport()```. In the following we show an example of ArCatch.Checker conformance checking report:
+
+```
+========================================================================================================
+ArCatch.Checker Exception Handling Conformance Checking Report
+--------------------------------------------------------------------------------------------------------
+Label: (V) = Rule Pass | (X) = Rule Fail
+========================================================================================================
+...
+--------------------------------------------------------------------------------------------------------
+(X) R8: only (BuL) can raise (BuLEx) 8 ms
+
+ -BuL module implementation classes:
+  -healthwatcher.business.complaint.ComplaintRecord
+  -healthwatcher.business.healthguide.HealthUnitRecord
+  -healthwatcher.business.healthguide.MedicalSpecialityRecord
+  -healthwatcher.business.factories.FacadeFactory
+  -healthwatcher.business.factories.RMIFacadeFactory
+  -healthwatcher.business.complaint.DiseaseRecord
+  -healthwatcher.business.complaint.SymptomRecord
+  -healthwatcher.business.employee.EmployeeRecord
+  -healthwatcher.business.factories.AbstractFacadeFactory
+
+ -BuLEx exception implementation classes:
+  -lib.exceptions.ObjectAlreadyInsertedException
+
+ -Rule Violations
+	-The method [healthwatcher.data.rdb.AddressRepositoryRDB.insert(healthwatcher.model.address.Address)] is raising the exception [lib.exceptions.ObjectAlreadyInsertedException]
+--------------------------------------------------------------------------------------------------------
+...
+```
 
 External Dependencies
 ---------------------
