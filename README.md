@@ -16,35 +16,75 @@ ArCatch in 5 steps
     ```
 2. Module Declaration
     ```java
-    ModuleElement view = ArCatch.element().module("View").matching("banksys.view.\\w+").build();
+    ModuleElement view = ArCatch.element()
+    	.module("View")
+		.matching("banksys.view.\\w+")
+		.build();
 
-    ModuleElement control = ArCatch.element().module("Control").matching("banksys.control.\\w+").build();
+    ModuleElement control = ArCatch.element()
+    	.module("Control")
+		.matching("banksys.control.\\w+")
+		.build();
 
-    ModuleElement model = ArCatch.element().module("Model").matching("banksys.model.\\w+").build();
+    ModuleElement model = ArCatch.element()
+    	.module("Model")
+		.matching("banksys.model.\\w+")
+		.build();
     ```
 3. Exception Declaration
     ```java
-    ExceptionElement modelEx = ArCatch.element().exception("ControlEx").matching("banksys.control.exception.\\w+").build();
+    ExceptionElement modelEx = ArCatch.element()
+    	.exception("ControlEx")
+		.matching("banksys.control.exception.\\w+")
+		.build();
 
-    ExceptionElement controlEx = ArCatch.element().exception("ModelEx").matching("banksys.model.exception.\\w+").build();
+    ExceptionElement controlEx = ArCatch.element()
+    	.exception("ModelEx")
+		.matching("banksys.model.exception.\\w+")
+		.build();
     ```
 4. Design Rule Especification
     ```java
-    DesignRule r1 = ArCatch.rule().only(model).canRaise(modelEx).build();
+    DesignRule r1 = ArCatch.rule()
+    	.only(model)
+		.canRaise(modelEx)
+		.build();
 
-    DesignRule r2 = ArCatch.rule().only(model).canSignal(modelEx).build();
+    DesignRule r2 = ArCatch.rule()
+    	.only(model)
+		.canSignal(modelEx)
+		.build();
     
-    DesignRule r3 = ArCatch.rule().module(control).mustHandle(modelEx).build();
+    DesignRule r3 = ArCatch.rule()
+    	.module(control)
+		.mustHandle(modelEx)
+		.build();
 
-    DesignRule r4 = ArCatch.rule().module(control).canOnlySignal(controlEx).build();
+    DesignRule r4 = ArCatch.rule()
+    	.module(control)
+		.canOnlySignal(controlEx)
+		.build();
 
-    DesignRule r5 = ArCatch.rule().exception(modelEx).cannotFlow(model, control, view).build();
+    DesignRule r5 = ArCatch.rule()
+    	.exception(modelEx)
+		.cannotFlow(model, control, view)
+		.build();
 
-    DesignRule r6 = ArCatch.rule().only(control).canRemap(modelEx).to(controlEx).build();
+    DesignRule r6 = ArCatch.rule()
+    	.only(control)
+		.canRemap(modelEx)
+		.to(controlEx)
+		.build();
 
-    DesignRule r7 = ArCatch.rule().module(view).mustHandle(controlEx).build();
+    DesignRule r7 = ArCatch.rule()
+    	.module(view)
+		.mustHandle(controlEx)
+		.build();
     
-    DesignRule r8 = ArCatch.rule().module(view).cannotHandle(modelEx).build();
+    DesignRule r8 = ArCatch.rule()
+    	.module(view)
+		.cannotHandle(modelEx)
+		.build();
     ```
 5. Checking Rules
     ```java
