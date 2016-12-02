@@ -33,12 +33,12 @@ ArCatch in 5 steps
     ```
 3. Exception Declaration
     ```java
-    ExceptionElement modelEx = ArCatch.element()
+    ExceptionElement controlEx = ArCatch.element()
     	.exception("ControlEx")
 		.matching("banksys.control.exception.\\w+")
 		.build();
 
-    ExceptionElement controlEx = ArCatch.element()
+    ExceptionElement modelEx = ArCatch.element()
     	.exception("ModelEx")
 		.matching("banksys.model.exception.\\w+")
 		.build();
